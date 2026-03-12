@@ -8,15 +8,15 @@ The implementation follows an incremental approach: infrastructure setup → cor
 
 ## Tasks
 
-- [ ] 1. Set up project structure and CDK infrastructure foundation
-  - [-] 1.1 Initialize CDK project with TypeScript
+- [x] 1. Set up project structure and CDK infrastructure foundation
+  - [x] 1.1 Initialize CDK project with TypeScript
     - Create CDK app structure with `cdk init app --language typescript`
     - Configure tsconfig.json with strict mode enabled
     - Set up project dependencies (aws-cdk-lib, constructs)
     - Create directory structure: `lib/` for CDK stacks, `lambda/` for Python handlers
     - _Requirements: All (infrastructure foundation)_
 
-  - [~] 1.2 Create DynamoDB table with single-table design
+  - [x] 1.2 Create DynamoDB table with single-table design
     - Define table with PK (string) and SK (string) in CDK
     - Configure GSI1 (GSI1PK, GSI1SK) for tier-based queries
     - Configure GSI2 (GSI2PK, GSI2SK) for transaction idempotency lookups
@@ -25,14 +25,14 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Add resource tags (environment, service, cost-center)
     - _Requirements: 1.1, 2.3, 4.5, 10.4, 11.1-11.5_
 
-  - [~] 1.3 Create EventBridge event bus and rules
+  - [x] 1.3 Create EventBridge event bus and rules
     - Define custom event bus for rewards events
     - Create event rules for signup, purchase, and redemption event types
     - Configure scheduled rules for tier evaluation (daily at 00:00 UTC)
     - Configure scheduled rules for expiration handler (daily at 01:00 UTC)
     - _Requirements: 1.1, 2.1, 4.1, 5.5, 6.2_
 
-  - [~] 1.4 Create API Gateway REST API
+  - [x] 1.4 Create API Gateway REST API
     - Define REST API with regional endpoint
     - Configure CORS policies
     - Enable access logging to CloudWatch
@@ -40,15 +40,15 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Configure throttling and rate limiting
     - _Requirements: 8.1-8.5_
 
-  - [~] 1.5 Set up Python Lambda project structure
+  - [x] 1.5 Set up Python Lambda project structure
     - Create `lambda/` directory with subdirectories for each handler
     - Set up requirements.txt with dependencies (boto3, hypothesis for testing)
     - Create shared modules: `common/models.py`, `common/validation.py`, `common/dynamodb.py`
     - Configure Python 3.11 runtime settings
     - _Requirements: All (code foundation)_
 
-- [ ] 2. Implement event schema validation and shared utilities
-  - [~] 2.1 Create event schema validation module
+- [x] 2. Implement event schema validation and shared utilities
+  - [x] 2.1 Create event schema validation module
     - Define Pydantic models for signup, purchase, and redemption events
     - Implement validation for required fields and data types
     - Add validation for negative amounts (purchase and redemption)
@@ -59,14 +59,14 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - **Property 18: Event Message Validation**
     - **Validates: Requirements 9.1, 9.2, 9.3**
 
-  - [~] 2.3 Create DynamoDB access layer
+  - [x] 2.3 Create DynamoDB access layer
     - Implement helper functions for get_member, update_member, create_transaction
     - Add conditional update logic for atomic balance modifications
     - Implement query functions for GSI1 (tier queries) and GSI2 (idempotency)
     - Add error handling for DynamoDB exceptions
     - _Requirements: 1.1, 2.5, 4.4, 10.2_
 
-  - [~] 2.4 Implement idempotency checker
+  - [x] 2.4 Implement idempotency checker
     - Create function to check transaction ID in GSI2
     - Implement TTL-based cleanup (30 days)
     - Return cached result for duplicate transaction IDs
@@ -78,14 +78,14 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - **Property 20: Transaction Identifier Retention**
     - **Validates: Requirements 10.4**
 
-- [ ] 3. Checkpoint - Validate infrastructure and shared utilities
+- [x] 3. Checkpoint - Validate infrastructure and shared utilities
   - Ensure CDK synth succeeds without errors
   - Verify DynamoDB table schema matches design
   - Run unit tests for validation and DynamoDB modules
   - Ensure all tests pass, ask the user if questions arise
 
-- [ ] 4. Implement enrollment handler Lambda function
-  - [~] 4.1 Create enrollment handler with event processing
+- [x] 4. Implement enrollment handler Lambda function
+  - [x] 4.1 Create enrollment handler with event processing
     - Parse and validate signup event message
     - Generate unique membership ID (UUID)
     - Check for duplicate enrollment using membership ID
@@ -107,7 +107,7 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Test idempotent duplicate transaction ID handling
     - _Requirements: 1.1-1.5_
 
-  - [~] 4.4 Create CDK construct for enrollment Lambda
+  - [x] 4.4 Create CDK construct for enrollment Lambda
     - Define Lambda function with Python 3.11 runtime
     - Configure IAM role with DynamoDB write permissions
     - Set memory to 512MB and timeout to 30 seconds
@@ -117,8 +117,8 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Enable X-Ray tracing
     - _Requirements: 1.1_
 
-- [ ] 5. Implement purchase handler Lambda function
-  - [~] 5.1 Create star calculation logic
+- [x] 5. Implement purchase handler Lambda function
+  - [x] 5.1 Create star calculation logic
     - Implement tier-based rate calculation (Green: 1.0, Gold: 1.2, Reserve: 1.7)
     - Add double star day multiplier (2.0x)
     - Add personal cup multiplier (2.0x)
@@ -133,7 +133,7 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - **Property 7: Personal Cup Multiplier**
     - **Validates: Requirements 3.5**
 
-  - [~] 5.3 Create purchase handler with event processing
+  - [x] 5.3 Create purchase handler with event processing
     - Parse and validate purchase event message
     - Validate membership ID exists
     - Calculate stars using tier rate and multipliers
@@ -163,7 +163,7 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Test idempotent processing
     - _Requirements: 2.1-2.6, 3.1-3.5_
 
-  - [~] 5.6 Create CDK construct for purchase Lambda
+  - [x] 5.6 Create CDK construct for purchase Lambda
     - Define Lambda function with Python 3.11 runtime
     - Configure IAM role with DynamoDB read/write permissions
     - Set memory to 512MB and timeout to 30 seconds
@@ -173,15 +173,15 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Enable X-Ray tracing
     - _Requirements: 2.1_
 
-- [ ] 6. Checkpoint - Validate enrollment and purchase handlers
+- [x] 6. Checkpoint - Validate enrollment and purchase handlers
   - Deploy CDK stack to test environment
   - Test enrollment flow with sample events
   - Test purchase flow for all tiers
   - Verify DynamoDB records created correctly
   - Ensure all tests pass, ask the user if questions arise
 
-- [ ] 7. Implement redemption handler Lambda function
-  - [~] 7.1 Create redemption handler with validation
+- [x] 7. Implement redemption handler Lambda function
+  - [x] 7.1 Create redemption handler with validation
     - Parse and validate redemption event message
     - Validate membership ID exists
     - Validate star balance is sufficient (conditional update)
@@ -205,7 +205,7 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Test idempotent processing
     - _Requirements: 4.1-4.6_
 
-  - [~] 7.4 Create CDK construct for redemption Lambda
+  - [x] 7.4 Create CDK construct for redemption Lambda
     - Define Lambda function with Python 3.11 runtime
     - Configure IAM role with DynamoDB read/write permissions
     - Set memory to 512MB and timeout to 30 seconds
@@ -215,8 +215,8 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Enable X-Ray tracing
     - _Requirements: 4.1_
 
-- [ ] 8. Implement tier evaluation handler Lambda function
-  - [~] 8.1 Create tier evaluation logic
+- [x] 8. Implement tier evaluation handler Lambda function
+  - [x] 8.1 Create tier evaluation logic
     - Query all members using GSI1 where next evaluation date has passed
     - Calculate annual star count from transactions in past 12 months
     - Determine new tier based on thresholds (500 → Gold, 2500 → Reserve)
@@ -243,7 +243,7 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Test tier change transaction recording
     - _Requirements: 5.1-5.5, 7.3_
 
-  - [~] 8.4 Create CDK construct for tier evaluation Lambda
+  - [x] 8.4 Create CDK construct for tier evaluation Lambda
     - Define Lambda function with Python 3.11 runtime
     - Configure IAM role with DynamoDB read/write permissions
     - Set memory to 1024MB and timeout to 300 seconds (batch processing)
@@ -253,8 +253,8 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Enable X-Ray tracing
     - _Requirements: 5.1_
 
-- [ ] 9. Implement expiration handler Lambda function
-  - [~] 9.1 Create expiration logic for Green members
+- [x] 9. Implement expiration handler Lambda function
+  - [x] 9.1 Create expiration logic for Green members
     - Query all Green tier members using GSI1
     - For each member, check last qualifying activity timestamp
     - If no activity in past month, query star ledger entries
@@ -281,7 +281,7 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Test balance update after expiration
     - _Requirements: 6.2-6.5, 7.1-7.2_
 
-  - [~] 9.4 Create CDK construct for expiration Lambda
+  - [x] 9.4 Create CDK construct for expiration Lambda
     - Define Lambda function with Python 3.11 runtime
     - Configure IAM role with DynamoDB read/write permissions
     - Set memory to 1024MB and timeout to 300 seconds (batch processing)
@@ -291,15 +291,15 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Enable X-Ray tracing
     - _Requirements: 6.2_
 
-- [ ] 10. Checkpoint - Validate tier evaluation and expiration handlers
+- [x] 10. Checkpoint - Validate tier evaluation and expiration handlers
   - Deploy updated CDK stack
   - Test tier evaluation with sample members at thresholds
   - Test expiration logic with inactive Green members
   - Verify scheduled rules trigger correctly
   - Ensure all tests pass, ask the user if questions arise
 
-- [ ] 11. Implement query handler Lambda function and API endpoints
-  - [~] 11.1 Create query handler for member balance
+- [x] 11. Implement query handler Lambda function and API endpoints
+  - [x] 11.1 Create query handler for member balance
     - Implement GET /v1/members/{membershipId} endpoint
     - Validate membership ID format
     - Fetch member profile from DynamoDB
@@ -308,7 +308,7 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Optimize for sub-200ms response time
     - _Requirements: 8.1-8.5_
 
-  - [~] 11.2 Create query handler for transaction history
+  - [x] 11.2 Create query handler for transaction history
     - Implement GET /v1/members/{membershipId}/transactions endpoint
     - Query transactions using PK=MEMBER#{id} and SK begins_with TXN#
     - Implement pagination with limit and nextToken
@@ -332,7 +332,7 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Test response time under 200ms (performance test)
     - _Requirements: 8.1-8.5, 11.1-11.5_
 
-  - [~] 11.5 Create CDK construct for query Lambda and API integration
+  - [x] 11.5 Create CDK construct for query Lambda and API integration
     - Define Lambda function with Python 3.11 runtime
     - Configure IAM role with DynamoDB read-only permissions
     - Set memory to 512MB and timeout to 10 seconds
@@ -343,8 +343,8 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Enable API caching with 60-second TTL
     - _Requirements: 8.1_
 
-- [ ] 12. Implement monitoring, alarms, and observability
-  - [~] 12.1 Create CloudWatch dashboards
+- [x] 12. Implement monitoring, alarms, and observability
+  - [x] 12.1 Create CloudWatch dashboards
     - Add metrics for Lambda invocations, errors, duration
     - Add metrics for DynamoDB read/write capacity and throttles
     - Add metrics for API Gateway requests, latency, 4xx/5xx errors
@@ -352,7 +352,7 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Create dashboard for each Lambda function
     - _Requirements: All (operational visibility)_
 
-  - [~] 12.2 Configure CloudWatch alarms
+  - [x] 12.2 Configure CloudWatch alarms
     - Create alarms for DLQ message count > 0 (all handlers)
     - Create alarms for Lambda error rate > 5%
     - Create alarms for API Gateway 5xx error rate > 1%
@@ -361,7 +361,7 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Configure SNS topic for alarm notifications
     - _Requirements: All (operational health)_
 
-  - [~] 12.3 Enable X-Ray tracing and structured logging
+  - [x] 12.3 Enable X-Ray tracing and structured logging
     - Configure X-Ray tracing for all Lambda functions
     - Add structured logging with JSON format
     - Include correlation IDs in all log entries
@@ -398,8 +398,8 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Test retry logic for transient errors
     - _Requirements: 9.1-9.5_
 
-- [ ] 14. Create CDK deployment configuration and documentation
-  - [~] 14.1 Configure CDK deployment settings
+- [x] 14. Create CDK deployment configuration and documentation
+  - [x] 14.1 Configure CDK deployment settings
     - Set up environment-specific configuration (dev, staging, prod)
     - Configure stack tags and naming conventions
     - Set removal policies (RETAIN for prod, DESTROY for dev)
@@ -407,7 +407,7 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Create deployment scripts
     - _Requirements: All (deployment)_
 
-  - [~] 14.2 Write deployment and operations documentation
+  - [x] 14.2 Write deployment and operations documentation
     - Document deployment process and prerequisites
     - Document environment variables and configuration
     - Document monitoring and alarm response procedures
@@ -415,7 +415,7 @@ The implementation follows an incremental approach: infrastructure setup → cor
     - Create runbook for common operational tasks
     - _Requirements: All (operations)_
 
-- [ ] 15. Final checkpoint - Complete system validation
+- [x] 15. Final checkpoint - Complete system validation
   - Run all unit tests and property tests
   - Run all integration tests
   - Deploy to test environment and run smoke tests

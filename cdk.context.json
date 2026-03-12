@@ -1,0 +1,78 @@
+{
+  "environments": {
+    "dev": {
+      "account": "123456789012",
+      "region": "us-east-1",
+      "removalPolicy": "DESTROY",
+      "logRetention": 7,
+      "enableDetailedMonitoring": false,
+      "enableXRayTracing": true,
+      "apiThrottling": {
+        "rateLimit": 100,
+        "burstLimit": 200
+      },
+      "lambdaMemory": {
+        "query": 256,
+        "enrollment": 256,
+        "purchase": 256,
+        "redemption": 256,
+        "tierEvaluation": 512,
+        "expiration": 512
+      }
+    },
+    "staging": {
+      "account": "123456789012",
+      "region": "us-east-1",
+      "removalPolicy": "RETAIN",
+      "logRetention": 30,
+      "enableDetailedMonitoring": true,
+      "enableXRayTracing": true,
+      "apiThrottling": {
+        "rateLimit": 500,
+        "burstLimit": 1000
+      },
+      "lambdaMemory": {
+        "query": 512,
+        "enrollment": 512,
+        "purchase": 512,
+        "redemption": 512,
+        "tierEvaluation": 1024,
+        "expiration": 1024
+      }
+    },
+    "prod": {
+      "account": "123456789012",
+      "region": "us-east-1",
+      "removalPolicy": "RETAIN",
+      "logRetention": 90,
+      "enableDetailedMonitoring": true,
+      "enableXRayTracing": true,
+      "apiThrottling": {
+        "rateLimit": 1000,
+        "burstLimit": 2000
+      },
+      "lambdaMemory": {
+        "query": 512,
+        "enrollment": 512,
+        "purchase": 512,
+        "redemption": 512,
+        "tierEvaluation": 1024,
+        "expiration": 1024
+      }
+    }
+  },
+  "stackTags": {
+    "Project": "rewards-program",
+    "Owner": "platform-team",
+    "CostCenter": "customer-loyalty",
+    "Environment": "${ENVIRONMENT}",
+    "ManagedBy": "CDK"
+  },
+  "namingConventions": {
+    "stackName": "rewards-${environment}",
+    "resourcePrefix": "rewards-${environment}",
+    "tableName": "rewards-program-${environment}",
+    "eventBusName": "rewards-program-events-${environment}",
+    "apiName": "rewards-program-api-${environment}"
+  }
+}
